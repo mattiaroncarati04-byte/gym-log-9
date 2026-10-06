@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1B2A49">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>TheGoat</title>
+<style>
+:root{--bg:#F4F5F9;--card:#fff;--tx:#1B2A49;--mu:#7A8499;--ln:#E2E6EF;--ac:#F28C28;--inp:#F4F5F9;--nv:#1B2A49;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1525;--card:#18233A;--tx:#F2F4F9;--mu:#94A0B8;--ln:#2A3856;--inp:#0E1525;--nv:#18233A}}
+:root[data-theme="dark"]{--bg:#0E1525;--card:#18233A;--tx:#F2F4F9;--mu:#94A0B8;--ln:#2A3856;--inp:#0E1525;--nv:#18233A}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:-apple-system,system-ui,"Segoe UI",Roboto,Arial,sans-serif;padding:0 14px 110px}
+.wrap{max-width:560px;margin:0 auto}
+h1{font-size:24px;margin:18px 0 4px}
+h1 b{color:var(--ac)}
+.sub{color:var(--mu);font-size:13px;margin:0 0 14px}
+button{font:inherit;cursor:pointer;border:0;color:inherit}
+.btn{width:100%;padding:14px;border-radius:12px;background:var(--ac);color:#fff;font-weight:700;font-size:16px;margin-bottom:10px}
+.ghost{flex:1;padding:11px;border-radius:10px;background:transparent;border:1.5px solid var(--ln);color:var(--tx);font-weight:600;font-size:14px}
+.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;border:1px solid var(--ln)}
+.sess{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--ln);border-radius:14px;padding:14px;margin-bottom:10px}
+.sess b{font-size:16px}.sess small{display:block;color:var(--mu);margin-top:3px;font-size:13px}
+input,textarea{font:inherit;font-size:16px;color:var(--tx);background:var(--inp);border:1.5px solid var(--ln);border-radius:10px;padding:10px;width:100%;min-width:0}
+input:focus,textarea:focus{outline:2px solid var(--ac);border-color:var(--ac)}
+input::placeholder,textarea::placeholder{color:var(--mu);opacity:.8}
+.top{display:flex;justify-content:space-between;align-items:center;margin:14px 0 8px}
+.lnk{background:none;color:var(--ac);font-weight:700;font-size:15px;padding:6px 0}
+.dng{color:#d64545}
+.two{display:grid;grid-template-columns:1fr 150px;gap:8px;margin-bottom:6px}
+.exh{display:flex;gap:8px;margin-bottom:10px}
+.exn{font-weight:700}
+.ic{width:42px;border-radius:10px;background:var(--inp);color:var(--mu);font-size:16px;flex:none}
+.set{display:grid;grid-template-columns:26px 1fr 1fr 82px;gap:8px;align-items:center;margin-bottom:8px}
+.set.hd{color:var(--mu);font-size:12px;font-weight:700;text-align:center;margin-bottom:4px}
+.n{color:var(--mu);font-weight:700;text-align:center}
+.set input{text-align:center;font-weight:600}
+.chk{height:42px;border-radius:10px;background:var(--inp);border:1.5px solid var(--ln);color:var(--mu);font-size:20px;font-weight:700;white-space:nowrap}
+.chk.on.run{font-size:15px}
+.rsl{font:inherit;font-size:13px;color:var(--tx);background:var(--inp);border:1.5px solid var(--ln);border-radius:8px;padding:3px 6px}
+.chk.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.row{display:flex;gap:8px;margin-top:4px}
+.hint{color:var(--mu);font-size:12px;margin:0 0 10px}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:10px 16px;border-radius:20px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s}
+#toast.on{opacity:1}
+.empty{text-align:center;color:var(--mu);padding:30px 10px}
+.lab{font-size:13px;font-weight:800;color:var(--ac);text-transform:uppercase;letter-spacing:.04em;margin:20px 0 8px}
+.tpl{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--ln);border-left:4px solid var(--ac);border-radius:14px;padding:14px;margin-bottom:10px;color:var(--tx)}
+.tpl b{font-size:17px;display:block}.tpl .lv{display:block;color:var(--mu);font-size:12px;margin:2px 0 8px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}.tags i{font-style:normal;font-size:12px;font-weight:700;background:var(--inp);border:1px solid var(--ln);border-radius:20px;padding:3px 10px}
+.tpl small{color:var(--mu);font-size:13px;line-height:1.45;display:block}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chip{background:var(--inp);border:1.5px solid var(--ln);color:var(--tx);border-radius:20px;padding:7px 12px;font-size:14px;font-weight:600}
+.chip.on{background:var(--ac);border-color:var(--ac);color:#fff}.chip.sm{padding:3px 9px;font-size:12px}
+.exl{display:grid;gap:8px;margin:10px 0}.exl .ghost{text-align:left}
+details.card summary{font-weight:700;cursor:pointer}details.card ul{padding-left:18px;margin:8px 0 0;font-size:14px;line-height:1.55}
+details.card p{font-size:13px;color:var(--mu);margin:10px 0 0}
+.lks{display:flex;gap:16px;margin:0 0 10px;font-size:13px}.lks a{color:var(--ac);font-weight:700;cursor:pointer;text-decoration:none}
+.pl{display:block;margin-top:8px;padding-top:8px;border-top:1px dashed var(--ln);color:var(--mu);font-size:12px;line-height:1.6}
+.goals{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}
+.gl{background:var(--card);border:2px solid var(--ln);border-radius:14px;padding:12px;text-align:left;color:var(--tx)}
+.gl.on{border-color:var(--ac);box-shadow:0 0 0 2px var(--ac) inset}
+.gl .e{font-size:22px;display:block;margin-bottom:2px}.gl b{display:block;font-size:15px}
+.gl small{display:block;color:var(--mu);font-size:12px;margin-top:3px;line-height:1.35}
+.tabs{display:flex;gap:6px;margin:14px 0 0;background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:4px}
+.tab{flex:1;padding:10px;border-radius:9px;background:transparent;font-weight:700;color:var(--mu);font-size:15px}.tab.on{background:var(--ac);color:#fff}
+.bars{display:flex;align-items:flex-end;gap:6px;height:130px;margin:6px 0 4px}
+.bc{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%}
+.bv{font-size:10px;color:var(--mu);margin-bottom:2px;white-space:nowrap}
+.bb{width:100%;background:var(--ac);border-radius:6px 6px 0 0;min-height:2px}
+.bl{display:flex;gap:6px}.bl span{flex:1;text-align:center;font-size:10px;color:var(--mu)}
+.wrow{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:8px 0;border-bottom:1px solid var(--ln)}.wrow:last-child{border:0}
+.wrow span:last-child{text-align:right}.wrow i{font-style:normal;font-weight:700}.up{color:#2fa36b}.dn{color:#d64545}
+.coach ul{margin:8px 0 0;padding-left:18px;line-height:1.6;font-size:14px}
+.sel{width:100%;font-size:16px;padding:10px;margin-bottom:6px}
+.ic.cf{width:auto;padding:0 12px;background:#d64545;color:#fff;font-size:13px;font-weight:700}
+.wh{display:flex;justify-content:space-between;align-items:baseline;margin:16px 0 6px;font-size:12px;color:var(--mu)}.wh b{color:var(--tx);font-size:14px}
+.px{display:flex;gap:8px;align-items:stretch}.px .ghost{text-align:left}.px i{font-style:normal;color:var(--mu);font-size:12px;font-weight:400;margin-left:4px}
+.ph{display:flex;align-items:center;justify-content:center;width:46px;flex:none;border:1.5px solid var(--ln);border-radius:10px;text-decoration:none;font-size:18px;background:var(--inp)}
+.msg{padding:10px 12px;border-radius:12px;margin:8px 0;font-size:14px;line-height:1.5}
+.msg.u{background:var(--ac);color:#fff;margin-left:28px}.msg.a{background:var(--inp);border:1px solid var(--ln);margin-right:18px}
+#chat{max-height:360px;overflow:auto}
+</style>
+</head>
+<body>
+<div class="wrap"><div id="app"></div></div>
+<datalist id="exl"></datalist>
+<div id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL='https://lsfucrfvnmsyztajnyxn.supabase.co';
+const SUPABASE_KEY='sb_publishable_vnk7CLEEkFAYNf5P0vOsVQ_foWraD4w';
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let AUTH_USER=null;
+const KEY='gymlog_v1';
+let S={sessions:[],cur:null,rest:90,goal:'ipertrofia',prog:{},tab:'home',tgt:3,ex:'',every:6,chat:[],customTpl:{}};
+try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const $=s=>document.querySelector(s);
+const uid=()=>Math.random().toString(36).slice(2,9);
+const today=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fd=d=>{try{return new Date(d+'T12:00:00').toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'})}catch(e){return d}};
+const num=v=>parseFloat(String(v).replace(',','.'))||0;
+const cur=()=>S.sessions.find(s=>s.id===S.cur);
+const blank=()=>({kg:'',reps:'',done:false});
+const exn=x=>x.split('|')[0];
+const ext=x=>({M:'macchina',C:'cavi',L:'pesi liberi',B:'corpo libero',G:'cardio',A:'attrezzo'})[x.split('|')[1]]||'';
+const GR={
+"Petto":{e:["Chest press machine|M","Chest press inclinata (macchina)|M","Pec deck (macchina croci)|M","Croci ai cavi|C","Croci ai cavi dal basso|C","Panca piana multipower|M","Panca piana manubri|L","Panca inclinata manubri|L","Panca piana bilanciere|L","Pullover manubrio|L","Push-up|B","Dip alle parallele|B"],p:["Spalle","Tricipiti"],t:"Muscoli di spinta: lavorano in squadra con spalle e tricipiti."},
+"Spalle":{e:["Shoulder press machine|M","Military press|L","Lento avanti manubri|L","Arnold press|L","Alzate laterali|L","Alzate laterali ai cavi|C","Alzate laterali (macchina)|M","Alzate frontali|L","Alzate posteriori|L","Reverse pec deck (macchina)|M","Face pull|C","Scrollate manubri|L"],p:["Petto","Tricipiti","Schiena"],t:"Aiutano in ogni spinta. Alzate posteriori e face pull si abbinano bene alla schiena."},
+"Tricipiti":{e:["Pushdown ai cavi|C","Pushdown con corda|C","Estensioni sopra la testa ai cavi|C","French press|L","Kickback manubrio|L","Tricipiti (macchina)|M","Dip assistiti (macchina)|M","Dip alla panca|B"],p:["Petto","Spalle"],t:"Lavorano già su petto e spalle: bastano 2-3 serie a fine sessione."},
+"Schiena":{e:["Lat machine|M","Lat machine presa stretta|M","Trazioni assistite|M","Trazioni alla sbarra|B","Row machine petto appoggiato|M","Row machine presa larga|M","Pulley basso|C","Pulley presa stretta|C","Rematore ai cavi un braccio|C","Pulldown a braccia tese ai cavi|C","Rematore manubrio|L","Rematore bilanciere|L","Stacco da terra|L","Iperestensioni (panca lombare)|M"],p:["Bicipiti","Spalle"],t:"Muscoli di tirata: i bicipiti lavorano già in ogni esercizio per la schiena."},
+"Bicipiti":{e:["Curl manubri|L","Curl bilanciere|L","Curl a martello|L","Curl ai cavi|C","Curl panca Scott (macchina)|M","Curl panca inclinata|L","Curl concentrato|L"],p:["Schiena"],t:"Meglio a fine sessione, dopo la schiena."},
+"Quadricipiti":{e:["Squat|L","Hack squat|M","Leg press|M","Leg extension|M","Squat al multipower|M","Goblet squat|L","Squat bulgaro|L","Affondi|L","Affondi camminati|L","Step-up|L"],p:["Femorali e glutei","Polpacci"],t:"Allena sempre davanti e dietro della gamba, per equilibrio."},
+"Femorali e glutei":{e:["Stacco rumeno|L","Leg curl|M","Leg curl seduto|M","Hip thrust|L","Hip thrust (macchina)|M","Glute kickback ai cavi|C","Abductor machine (esterno coscia)|M","Adductor machine (interno coscia)|M","Ponte glutei|B"],p:["Quadricipiti","Polpacci"],t:"Il retro della gamba completa il lavoro dei quadricipiti."},
+"Polpacci":{e:["Calf in piedi|M","Calf seduto|M","Calf alla leg press|M","Calf a corpo libero|B"],p:["Quadricipiti","Femorali e glutei"],t:"Vanno bene a fine sessione gambe."},
+"Addome":{e:["Plank|B","Crunch|B","Crunch ai cavi|C","Crunch (macchina)|M","Sollevamento gambe|B","Russian twist|L","Ab wheel|A","Mountain climber|B","Rotazioni ai cavi (woodchop)|C"],p:["Schiena","Quadricipiti"],t:"Si aggiunge a qualsiasi sessione, meglio alla fine."},
+"Potenza":{e:["Squat con salto|B","Box jump|B","Salto in lungo da fermo|B","Kettlebell swing|L","Lancio palla medica al petto|A","Push-up esplosivi|B","Burpee|B","Salto con la corda|A","Battle rope|A"],p:["Quadricipiti","Addome"],t:"Movimenti veloci: meglio all'inizio della sessione, da freschi."},
+"Cardio":{e:["Tapis roulant|G","Cyclette|G","Ellittica|G","Vogatore (remoergometro)|G","Stair climber (scala)|G","Assault bike|G"],p:["Addome"],t:"Ritmo costante o intervalli: segna velocità o livello nel campo KG."}
+};
+const DEF=Object.values(GR).flatMap(g=>g.e.map(exn));
+const GOALS={
+ipertrofia:{e:"💪",n:"Ipertrofia",d:"Massa e pompa · 10-9-8 rip",h:"Massa e pompa: circa 10-9-8 ripetizioni sulle serie, recuperi da 1 a 2:30.",wm:10,wu:`<b>Riscaldamento (10 min):</b><br>1. Manubri da 1 kg: alzate laterali, frontali, posteriori, croci e lat machine (se possibile). Poi ripeti tutto: 2 giri in tutto.<br>2. Primo allungamento.<br>3. Avvicinamento al primo macchinario, 4 serie: peso crescente da 10, 7 e 4 ripetizioni, più 1 serie con il peso con cui parti. Dopo ogni serie fai un allungamento.<br>4. Poi parti con le serie vere.`,tips:["<b>3 giorni:</b> Push · riposo · Pull · riposo · Gambe","<b>6 giorni:</b> Push · Pull · Gambe, poi ripeti","Non allenare lo stesso gruppo in giorni consecutivi: lascia almeno 48 ore.","Parti dagli esercizi grandi (chest press, squat, lat machine) e finisci con quelli piccoli (bicipiti, tricipiti, addome).","<b>Un'ora:</b> riscaldamento 10 min · parte principale 45-50 min.","<b>Recuperi:</b> esercizi principali 2-2:30 minuti, complementari 60-90 secondi. Il timer parte quando tocchi ✓ accanto alla serie.","<b>Ripetizioni:</b> circa 10-9-8 sulle tre serie. Scegli un carico che ti lascia al massimo 1-2 ripetizioni in riserva, con esecuzione controllata.","Con carichi alti usa i fermi di sicurezza del rack o chiedi uno spotter, e non sacrificare la tecnica."]},
+forza:{e:"🏋️",n:"Forza",d:"Carichi massimi · 3-6 rip",h:"Forza massima: poche ripetizioni (3-6), carichi alti e recuperi lunghi (2:30-3:30). Poche serie, tutte di qualità.",wm:10,wu:`<b>Riscaldamento (10 min):</b><br>1. Manubri da 1 kg: alzate laterali, frontali, posteriori, croci e lat machine (se possibile). Poi ripeti tutto: 2 giri in tutto.<br>2. Primo allungamento.<br>3. Avvicinamento al primo macchinario, 4 serie: peso crescente da 10, 7 e 4 ripetizioni, più 1 serie con il peso con cui parti. Dopo ogni serie fai un allungamento.<br>4. Poi parti con le serie vere.`,tips:["<b>Ripetizioni:</b> 3-6 con carichi vicini al massimo, sempre con tecnica perfetta.","<b>Recuperi:</b> 2:30-3:30 sugli esercizi principali: servono per rendere al massimo nella serie dopo.","<b>3 giorni:</b> Push · Pull · Gambe, con almeno un giorno di riposo tra l'uno e l'altro.","Aumenta il carico di poco (1-2,5 kg) quando completi tutte le serie previste.","Usa i fermi di sicurezza del rack o uno spotter: non andare mai a cedimento da solo."]},
+esplosivita:{e:"⚡",n:"Esplosività",d:"Potenza e velocità · 3-6 rip veloci",h:"Potenza: poche ripetizioni (3-6) eseguite alla massima velocità, recuperi lunghi (1:30-2:30) per partire sempre fresco.",wm:10,wu:`<b>Riscaldamento (10 min):</b><br>1. Manubri da 1 kg: alzate laterali, frontali, posteriori, croci e lat machine (se possibile). Poi ripeti tutto: 2 giri in tutto.<br>2. Primo allungamento.<br>3. Avvicinamento al primo macchinario, 4 serie: peso crescente da 10, 7 e 4 ripetizioni, più 1 serie con il peso con cui parti. Dopo ogni serie fai un allungamento.<br>4. 2 serie di salti leggeri sul posto per attivare i muscoli.<br>5. Poi parti con le serie vere.`,tips:["<b>Ripetizioni:</b> poche e velocissime: conta la qualità del movimento più del peso.","<b>Recuperi:</b> 1:30-2:30: la potenza si allena da freschi, non da stanchi.","Fai l'esplosività all'inizio della sessione, prima di essere affaticato.","Atterra sempre morbido sulle ginocchia piegate e usa una superficie stabile per i salti.","2-3 volte a settimana, con almeno 48 ore tra una sessione e l'altra."]},
+cardio:{e:"🏃",n:"Cardio",d:"Fiato e resistenza · intervalli e ritmo",h:"Resistenza e fiato. Nel campo KG puoi segnare velocità o livello, in REP la durata o i giri.",wm:5,wu:`<b>Riscaldamento (5 min):</b><br>1. Manubri da 1 kg: alzate laterali, frontali, posteriori, croci e lat machine (se possibile), 1 giro.<br>2. Primo allungamento.<br>3. Poi parti con i primi minuti a ritmo molto leggero.`,tips:["<b>Ritmo costante:</b> devi riuscire a parlare a frasi brevi mentre lo fai.","<b>Intervalli:</b> 30 secondi forti e 90 piano, ripetuti. Il recupero è il tempo piano.","2-3 sedute a settimana: alterna ritmo costante e intervalli.","Se hai problemi cardiaci o dubbi sulla tua forma, chiedi prima al medico."]}
+};
+const TPL={
+ipertrofia:{
+push:{n:"Push · spinta",lv:"Petto + spalle + tricipiti",g:["Petto","Spalle","Tricipiti"],why:"Chest press e military press per primi, poi inclinata, alzate laterali e tricipiti per la pompa. La macchina è sicura anche da solo.",ex:[["Chest press machine",4,"8",150],["Military press",4,"8",120],["Panca inclinata manubri",3,"10",90],["Alzate laterali",3,"10",60],["Pushdown ai cavi",3,"10",75]]},
+pull:{n:"Pull · tirata",lv:"Schiena + bicipiti + spalle posteriori",g:["Schiena","Bicipiti","Spalle post."],why:"Row machine a petto appoggiato per lo spessore (schiena protetta), poi lat machine per la larghezza e pulley per il lavoro orizzontale. Bicipiti e spalle posteriori in fondo.",ex:[["Row machine petto appoggiato",4,"8",150],["Lat machine",4,"10",90],["Pulley basso",3,"10",90],["Curl bilanciere",3,"10",75],["Face pull",3,"10",60]]},
+legs:{n:"Gambe",lv:"Quadricipiti + femorali + glutei + polpacci",g:["Quadricipiti","Femorali","Glutei","Polpacci"],why:"Squat e stacco rumeno per primi, poi leg press e leg curl per svuotare il muscolo.",ex:[["Squat",4,"8",150],["Stacco rumeno",4,"8",120],["Leg press",3,"10",90],["Leg curl",3,"10",75],["Calf in piedi",3,"10",60]]}
+},
+forza:{
+push:{n:"Push · spinta",lv:"Petto + spalle + tricipiti · forza",g:["Petto","Spalle","Tricipiti"],why:"Pochi esercizi, serie da 5 con carichi alti e recuperi lunghi. Tutte macchine o rack: sicuro anche da solo.",ex:[["Chest press machine",5,"5",180],["Military press",4,"5",180],["Chest press inclinata (macchina)",3,"6",150]]},
+pull:{n:"Pull · tirata",lv:"Schiena + bicipiti + spalle posteriori · forza",g:["Schiena","Bicipiti","Spalle post."],why:"Row machine e lat machine da 5-6 ripetizioni; face pull finali per proteggere le spalle.",ex:[["Row machine petto appoggiato",5,"5",180],["Lat machine",4,"6",150],["Pulley basso",3,"6",150],["Face pull",2,"10",60]]},
+legs:{n:"Gambe",lv:"Quadricipiti + femorali + glutei · forza",g:["Quadricipiti","Femorali","Glutei"],why:"Squat e stacco rumeno da 5 ripetizioni con recuperi lunghi, poi leg press per volume.",ex:[["Squat",5,"5",210],["Stacco rumeno",4,"5",180],["Leg press",3,"8",120]]}
+},
+esplosivita:{
+legs:{n:"Gambe esplosive",lv:"Quadricipiti + glutei + polpacci · potenza",g:["Quadricipiti","Glutei","Polpacci"],why:"Salti e movimenti veloci prima, squat veloce in salita alla fine. Ogni ripetizione alla massima velocità.",ex:[["Squat con salto",4,"5",120],["Box jump",4,"5",90],["Kettlebell swing",4,"10",90],["Squat veloce in salita",4,"4",150]]},
+upper:{n:"Parte alta esplosiva",lv:"Petto + schiena + spalle · potenza",g:["Petto","Schiena","Spalle"],why:"Lanci e spinte veloci per allenare la potenza della parte alta. Carico medio, velocità massima.",ex:[["Lancio palla medica al petto",4,"6",90],["Push-up esplosivi",4,"6",90],["Chest press machine veloce",4,"5",120],["Row machine veloce",4,"5",120],["Face pull",2,"12",60]]},
+power:{n:"Full power",lv:"Tutto il corpo · potenza",g:["Gambe","Core","Spalle","Schiena"],why:"Una sessione completa di potenza: swing, salti e lanci con recuperi lunghi per ripetere sempre con qualità.",ex:[["Kettlebell swing",4,"10",90],["Box jump",4,"5",90],["Lancio palla medica al petto",4,"6",90],["Squat con salto",3,"5",120],["Salto in lungo da fermo",3,"5",90]]}
+},
+cardio:{
+steady:{n:"Cardio costante",lv:"Resistenza · ritmo costante",g:["Fiato","Resistenza"],why:"4 blocchi da 12 minuti a ritmo costante su tapis, ciclette o ellittica. Tra un blocco e l'altro 30 secondi per bere e segnare velocità o livello.",ex:[["Tapis, ciclette o ellittica",4,"12 min",30,50],["Plank",3,"30 sec",45]]},
+hiit:{n:"Intervalli HIIT",lv:"Fiato · alta intensità",g:["Fiato","Metabolismo"],why:"10 intervalli da 30 secondi forti e 90 secondi piano, poi circuito di esercizi a corpo libero per chiudere.",ex:[["Intervalli bike o tapis",10,"30 sec forte",90,20],["Burpee",4,"10",60],["Battle rope",4,"20 sec",60],["Mountain climber",4,"30 sec",45],["Salto con la corda",4,"1 min",45],["Plank",3,"30 sec",45]]},
+circuit:{n:"Circuito metabolico",lv:"Tutto il corpo · poco recupero",g:["Gambe","Petto","Schiena","Fiato"],why:"Esercizi a ripetizioni medie con recuperi corti per tenere alto il battito, chiusi da 10 minuti di vogatore.",ex:[["Kettlebell swing",4,"15",45],["Goblet squat",4,"12",45],["Push-up",4,"12",45],["Lat machine",4,"12",45],["Affondi",4,"10",45],["Vogatore (remoergometro)",1,"10 min",30,10],["Plank",3,"30 sec",45]]}
+}
+};
+const durS=x=>x[4]?x[4]*60:x[1]*(45+x[3])+60;
+const tmin=(t,g)=>Math.round(t.ex.reduce((a,x)=>a+durS(x),0)/60)+GOALS[g].wm;
+const est=s=>Math.round(s.exercises.filter(e=>e.name.trim()).reduce((a,e)=>a+(e.dur?e.dur*60:e.sets.length*(45+(e.rest||S.rest))+60),0)/60)+GOALS[s.goal||'ipertrofia'].wm;
+const SWAP={"Chest press machine":"Chest press inclinata (macchina)","Panca inclinata manubri":"Chest press inclinata (macchina)","Military press":"Shoulder press machine","Alzate laterali":"Alzate laterali ai cavi","Pushdown ai cavi":"Pushdown con corda","Row machine petto appoggiato":"Row machine presa larga","Lat machine":"Trazioni assistite","Pulley basso":"Pulley presa stretta","Curl bilanciere":"Curl manubri","Face pull":"Alzate posteriori","Squat":"Hack squat","Leg press":"Affondi","Leg curl":"Leg curl seduto","Calf in piedi":"Calf seduto","Box jump":"Salto in lungo da fermo","Intervalli bike o tapis":"Intervalli vogatore"};
+function tplEx(t,ph){
+  if(!ph||ph%2)return t.ex;
+  const used=new Set(t.ex.map(x=>x[0]));
+  return t.ex.map(x=>{const w=SWAP[x[0]];if(w&&!used.has(w)){used.add(w);return [w].concat(x.slice(1))}return x});
+}
+function progInfo(g,k){
+  const pr=S.prog&&S.prog[g+':'+k];if(!pr)return null;
+  const wk=Math.max(1,Math.floor((Date.now()-new Date(pr.start+'T12:00:00'))/6048e5)+1);
+  const ss=S.sessions.filter(x=>(x.goal||'ipertrofia')===g&&x.tpl===k&&x.date>=pr.start).sort((a,b)=>a.date<b.date?-1:1);
+  let tr=null;
+  if(ss.length>=4){const v=x=>stats(x).vol,a=(v(ss[0])+v(ss[1]))/2,b=(v(ss[ss.length-1])+v(ss[ss.length-2]))/2;if(a>0)tr=(b-a)/a}
+  const ev=S.every||6,due=wk>=ev,why=due?'Sono passate '+ev+' settimane: cambio stimolo per continuare a crescere.':'';
+  return{pr:pr,wk:wk,tr:tr,n:ss.length,due:due,why:why};
+}
+function sug(e,pv,goal){
+  if(!pv||!pv.length)return '';
+  const hyp=(goal||'ipertrofia')==='ipertrofia';
+  if(!hyp&&!/^\d+$/.test(e.reps||''))return '';
+  const tg=hyp?9:+e.reps;
+  if(!pv.every(t=>t.done&&num(t.reps)>=tg&&num(t.kg)>0))return '';
+  const mx=Math.max(...pv.map(t=>num(t.kg)));
+  return `<p class="hint">💡 Ultima volta hai chiuso tutte le serie con almeno ${tg} ripetizioni: prova ${(mx+2.5).toLocaleString('it-IT')} kg.</p>`;
+}
+function newS(s){
+  if(!s.tpl||!(s.phase>1))return false;
+  const same=S.sessions.filter(x=>x.tpl===s.tpl&&(x.goal||'ipertrofia')===(s.goal||'ipertrofia')&&x.phase===s.phase);
+  return same[same.length-1]===s;
+}
+function plan(s){
+  const g=GOALS[s.goal||'ipertrofia'],pr=s.tpl&&S.prog&&S.prog[(s.goal||'ipertrofia')+':'+s.tpl];
+  const wk=pr?Math.max(1,Math.floor((Date.now()-new Date(pr.start+'T12:00:00'))/6048e5)+1):0;
+  return `<div class="card"><b>⏱ Sessione da circa ${est(s)} minuti</b>${newS(s)?`<p class="hint" style="margin:6px 0 0;color:var(--ac);font-weight:700">🐐 Nuova scheda per te, GOAT!</p>`:''}<p class="hint" style="margin:6px 0 0">${g.wu}</p></div>`}
+
+function stats(s){let sets=0,vol=0;s.exercises.forEach(e=>e.sets.forEach(t=>{if(t.done){sets++;vol+=num(t.kg)*num(t.reps)}}));return{sets,vol}}
+function prevSets(name,id){
+  const n=name.trim().toLowerCase();if(!n)return null;
+  for(const s of S.sessions){if(s.id===id)continue;
+    const e=s.exercises.find(x=>x.name.trim().toLowerCase()===n);if(e)return e.sets}
+  return null;
+}
+function baseTpl(g,k){return TPL[g]&&TPL[g][k]?TPL[g][k]:null}
+function getTpl(g,k){
+  const b=baseTpl(g,k);if(!b)return null;
+  const c=S.customTpl&&S.customTpl[g]&&S.customTpl[g][k];
+  return c?Object.assign({},b,c,{ex:(c.ex||b.ex).map(x=>x.slice())}):b;
+}
+function ensureCustomTpl(g,k){
+  S.customTpl=S.customTpl||{};S.customTpl[g]=S.customTpl[g]||{};
+  if(!S.customTpl[g][k]){const b=baseTpl(g,k);S.customTpl[g][k]={n:b.n,ex:b.ex.map(x=>x.slice())}}
+  return S.customTpl[g][k];
+}
+function tplGroups(g,k){
+  const map={push:["Petto","Spalle","Tricipiti"],pull:["Schiena","Bicipiti","Spalle"],legs:["Quadricipiti","Femorali e glutei","Polpacci"],upper:["Petto","Schiena","Spalle","Bicipiti","Tricipiti"],power:["Potenza","Quadricipiti","Femorali e glutei","Addome"],steady:["Cardio","Addome"],hiit:["Cardio","Potenza","Addome"],circuit:["Cardio","Potenza","Quadricipiti","Schiena","Petto","Addome"]};
+  return (map[k]||Object.keys(GR)).filter(x=>GR[x]);
+}
+function tplExerciseAllowed(k,n){
+  if(k==='pull'&&n==='Arnold press')return false;
+  if(k==='push'&&n==='Face pull')return false;
+  return true;
+}
+function exOptions(sel,groups){
+  return groups.map(gr=>`<optgroup label="${esc(gr)}">${GR[gr].e.map(v=>{const n=exn(v);return `<option value="${esc(n)}"${n===sel?' selected':''}>${esc(n)} · ${esc(ext(v))}</option>`}).join('')}</optgroup>`).join('');
+}
+function tplEditor(g,k,t){
+  const groups=tplGroups(g,k),available=new Set(groups.flatMap(gr=>GR[gr].e.map(exn)));
+  const rows=t.ex.map((x,i)=>`<div style="padding:10px 0;border-bottom:1px solid var(--ln)"><b style="font-size:13px">Esercizio ${i+1}</b><select class="sel" style="margin-top:6px" data-f="ctname" data-g="${g}" data-k="${k}" data-i="${i}">${available.has(x[0])?'':`<option value="${esc(x[0])}" selected>${esc(x[0])}</option>`}${exOptions(x[0],groups)}</select><div class="two"><input inputmode="numeric" data-f="ctsets" data-g="${g}" data-k="${k}" data-i="${i}" value="${x[1]}" placeholder="Serie"><input data-f="ctreps" data-g="${g}" data-k="${k}" data-i="${i}" value="${esc(x[2]||'')}" placeholder="Ripetizioni"></div><p class="hint" style="margin:8px 0 0">Recupero <select class="rsl" data-f="ctrest" data-g="${g}" data-k="${k}" data-i="${i}">${RS.map(v=>`<option value="${v}"${v===+x[3]?' selected':''}>${mmss(v)}</option>`).join('')}</select> · <button class="lnk" data-a="ctdel" data-g="${g}" data-k="${k}" data-i="${i}">Elimina</button></p></div>`).join('');
+  return `<details class="card" style="margin-top:-4px"><summary><b>✏️ Modifica e salva qui</b></summary><p class="hint">Tocca un esercizio per vedere l’elenco completo già presente nell’app, diviso per gruppo muscolare. Scegli quello che vuoi e salva direttamente qui.</p>${rows}<button class="ghost" style="width:100%;margin-top:10px" data-a="ctadd" data-g="${g}" data-k="${k}">+ Aggiungi esercizio</button><button class="btn" style="margin-top:8px" data-a="ctsave" data-g="${g}" data-k="${k}">💾 Salva scheda</button><button class="lnk" style="width:100%;margin-top:8px" data-a="ctreset" data-g="${g}" data-k="${k}">Ripristina originale</button></details>`;
+}
+
+function viewHome(){
+  const g=S.goal&&GOALS[S.goal]?S.goal:'ipertrofia',G=GOALS[g];
+  const sl=S.sessions.slice().sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:0),gk=wk0(today());
+  const wend=k=>{const d=new Date(k+'T12:00:00');d.setDate(d.getDate()+6);return dkey(d)};
+  const MESI=['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'];
+  let lastK='';
+  const l=sl.map(s=>{const t=stats(s),k=wk0(s.date);let h='';
+    if(k!==lastK){lastK=k;const n=sl.filter(x=>wk0(x.date)===k).length,md=new Date(k+'T12:00:00'),lab=Math.ceil(md.getDate()/7)+'ª settimana di '+MESI[md.getMonth()];
+      h=`<div class="wh"><b>${lab}</b><span>${fdm(k)} – ${fdm(wend(k))} · ${n} allenament${n===1?'o':'i'}</span></div>`}
+    return h+`<button class="sess" data-a="open" data-id="${s.id}"><b>${esc(s.name||'Allenamento')}</b><small>${fd(s.date)} · ${s.exercises.length} ${s.exercises.length===1?'esercizio':'esercizi'} · ${t.sets} ${t.sets===1?'serie fatta':'serie fatte'}${t.vol?' · '+Math.round(t.vol).toLocaleString('it-IT')+' kg':''}</small></button>`}).join('');
+  const gc=Object.keys(GOALS).map(k=>`<button class="gl${k===g?' on':''}" data-a="goal" data-g="${k}"><span class="e">${GOALS[k].e}</span><b>${esc(GOALS[k].n)}</b><small>${esc(GOALS[k].d)}</small></button>`).join('');
+  const tp=Object.keys(TPL[g]).map(k=>{const t0=getTpl(g,k),pk=S.prog&&S.prog[g+':'+k],ph=pk?pk.phase:1,t=Object.assign({},t0,{ex:(S.customTpl&&S.customTpl[g]&&S.customTpl[g][k])?t0.ex:tplEx(t0,ph)}),pi=progInfo(g,k);
+    return `<div><button class="tpl" data-a="tpl" data-k="${k}"><b>${esc(t.n)}</b><span class="lv">${esc(t.lv)} · ⏱ ${tmin(t,g)} min</span><span class="tags">${t.g.map(x=>`<i>${esc(x)}</i>`).join('')}</span><small>${esc(t.why)}</small>${pi&&pi.due?'<small style="color:var(--ac);font-weight:700;margin-top:6px">🐐 Nuova scheda per te, GOAT: la trovi alla prossima sessione</small>':''}<span class="pl">${t.ex.map(x=>`${esc(x[0])} · ${x[1]} serie · ${esc(x[2]||'')} rip · rec. ${mmss(x[3])}`).join("<br>")}</span></button></div>`}).join('');
+  return `${tabs('home')}<h1>The<b>Goat</b></h1><p class="sub">Il tuo diario allenamenti. Si salva da solo su questo telefono.</p>
+  ${coachChip()}
+  <div class="lab">1 · Che allenamento vuoi fare?</div>
+  <div class="goals">${gc}</div>
+  <div class="lab">2 · La tua scheda</div>
+  <p class="hint">${esc(G.h)}</p>
+  ${tp}
+  <div class="card"><b>🔄 Cambio scheda automatico</b><p class="hint" style="margin:6px 0 0">Ogni <select class="rsl" data-f="every">${[3,4,5,6,7,8,10,12].map(n=>`<option value="${n}"${n===(S.every||6)?' selected':''}>${n}</option>`).join('')}</select> settimane la scheda si aggiorna da sola con esercizi nuovi per gli stessi muscoli. Le settimane contano da quando hai iniziato la scheda.</p></div>
+  <details class="card"><summary>Guida · ${esc(G.n)}</summary><ul>${G.tips.map(x=>`<li>${x}</li>`).join('')}</ul>
+  <p>Indicazioni generali. In caso di dubbi, infortuni o patologie chiedi a un istruttore o al medico.</p></details>
+  <div class="lab">Oppure fai da te</div>
+  <button class="btn" data-a="new">+ Sessione libera</button>
+  ${S.sessions.length?`<button class="btn" style="background:var(--card);color:var(--tx);border:1.5px solid var(--ln)" data-a="repeat">↻ Ripeti l'ultima sessione</button><div class="lab">Le tue sessioni</div>${l}`:''}`;
+}
+const dkey=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const wk0=ds=>{const d=new Date(ds+'T12:00:00');d.setDate(d.getDate()-((d.getDay()+6)%7));return dkey(d)};
+const addW=(k,n)=>{const d=new Date(k+'T12:00:00');d.setDate(d.getDate()+7*n);return dkey(d)};
+const fdm=k=>{const d=new Date(k+'T12:00:00');return d.getDate()+'/'+(d.getMonth()+1)};
+const kfmt=v=>v>=1000?(v/1000).toFixed(1).replace('.',',')+'k':String(Math.round(v));
+function weekly(n){
+  const k0=wk0(today()),m={};
+  S.sessions.forEach(x=>{const t=stats(x);if(!t.sets)return;const k=wk0(x.date),o=m[k]||(m[k]={c:0,sets:0,vol:0});o.c++;o.sets+=t.sets;o.vol+=x.goal==='cardio'?0:t.vol});
+  return Array.from({length:n},(_,i)=>{const k=addW(k0,i-n+1),o=m[k]||{c:0,sets:0,vol:0};return{k:k,c:o.c,sets:o.sets,vol:o.vol}});
+}
+function exData(){
+  const E={};
+  S.sessions.forEach(x=>{if(x.goal==='cardio')return;const k=wk0(x.date);
+    x.exercises.forEach(e=>{const nm=e.name.trim();if(!nm)return;const id=nm.toLowerCase();
+      e.sets.forEach(t=>{const kg=num(t.kg),r=num(t.reps);if(!t.done||kg<=0||r<=0)return;
+        const o=E[id]||(E[id]={n:nm,w:{}}),w=o.w[k]||(o.w[k]={kg:0,r1:0,best:''}),r1=kg*(1+Math.min(r,12)/30);
+        if(kg>w.kg)w.kg=kg;if(r1>w.r1){w.r1=r1;w.best=kg+'×'+r}})})});
+  return E;
+}
+function coach(){
+  if(!S.sessions.some(x=>stats(x).sets))return ['Fai il tuo primo allenamento e segna le serie con ⏱: qui troverai il tuo andamento e i miei consigli.'];
+  const L=[],tg=S.tgt||3,W=weekly(12),cu=W[W.length-1],prev=W[W.length-2],pp=W[W.length-3];
+  const left=6-((new Date().getDay()+6)%7);
+  if(cu.c>=tg)L.push('🎉 Obiettivo della settimana raggiunto: '+cu.c+' allenamenti su '+tg+'.');
+  else{const m=tg-cu.c;L.push('Questa settimana: '+cu.c+'/'+tg+' allenamenti. '+(m>left+1?'Te ne mancano '+m+' ma restano pochi giorni: meglio uno in meno fatto bene che uno fatto di fretta.':'Te ne mancano '+m+', hai ancora '+(left+1)+' giorni (oggi compreso).'))}
+  let st=0;for(let i=W.length-2;i>=0&&W[i].c>=tg;i--)st++;if(cu.c>=tg)st++;
+  if(st>=2)L.push('🔥 '+st+' settimane di fila con l\'obiettivo centrato: ottima costanza.');
+  if(prev&&pp&&prev.vol>0&&pp.vol>0){const d=(prev.vol-pp.vol)/pp.vol;
+    if(d>=.05)L.push('📈 Settimana scorsa volume +'+Math.round(d*100)+'% rispetto a quella prima: stai crescendo.');
+    else if(d<=-.15)L.push('📉 Settimana scorsa volume '+Math.round(d*100)+'%. Se sei stanco, una settimana più leggera ci sta; se è mancanza di tempo, mantieni almeno le serie principali.')}
+  const E=exData(),prs=[],stall=[];
+  Object.keys(E).forEach(id=>{const m=E[id].w,ks=Object.keys(m).sort(),c=m[cu.k];
+    if(c){const bf=ks.filter(k=>k<cu.k).map(k=>m[k].r1);if(bf.length&&c.r1>Math.max(...bf))prs.push(E[id].n+' '+c.best)}
+    if(ks.length>=4&&ks[ks.length-1]>=addW(cu.k,-1)){const l3=ks.slice(-3),e=ks.slice(0,-3);
+      if(Math.max(...l3.map(k=>m[k].kg))<=Math.max(...e.map(k=>m[k].kg)))stall.push(E[id].n)}});
+  if(prs.length)L.push('🏆 Nuovo record questa settimana: '+prs.slice(0,3).join(', ')+'.');
+  if(stall.length)L.push('⏸ Carico fermo da 3 settimane su: '+stall.slice(0,2).join(', ')+'. Prova +2,5 kg, oppure cambia ripetizioni o recupero.');
+  const last=S.sessions.filter(x=>stats(x).sets).map(x=>x.date).sort().pop(),gg=Math.floor((Date.now()-new Date(last+'T12:00:00'))/864e5);
+  if(gg>=7)L.push('Sono passati '+gg+' giorni dall\'ultimo allenamento: riparti con una sessione normale, senza recuperare tutto in una volta.');
+  return L;
+}
+function loginView(msg=''){
+  return `<h1>The<b>Goat</b></h1><p class="sub">Accesso privato</p><div class="card"><b>🔐 Accedi</b><p class="hint" style="margin-top:6px">Solo gli utenti autorizzati possono entrare.</p>${msg?`<p class="hint" style="color:#d64545">${esc(msg)}</p>`:''}<input id="loginEmail" type="email" autocomplete="email" placeholder="Email" style="margin-bottom:8px"><input id="loginPass" type="password" autocomplete="current-password" placeholder="Password" style="margin-bottom:10px"><button class="btn" id="loginBtn">Accedi</button></div>`;
+}
+function showLogin(msg=''){
+  $('#app').innerHTML=loginView(msg);
+  $('#loginBtn').onclick=async()=>{const email=$('#loginEmail').value.trim(),password=$('#loginPass').value;if(!email||!password)return showLogin('Inserisci email e password.');$('#loginBtn').disabled=true;const {data,error}=await sb.auth.signInWithPassword({email,password});if(error)return showLogin('Email o password non corrette.');AUTH_USER=data.user;render();};
+  $('#loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')$('#loginBtn').click()});
+}
+async function logout(){await sb.auth.signOut();AUTH_USER=null;showLogin();}
+const tabs=t=>`<div class="tabs"><button class="tab${t==='home'?' on':''}" data-a="tab" data-t="home">Allenamento</button><button class="tab${t==='prog'?' on':''}" data-a="tab" data-t="prog">Progressi</button><button class="tab${t==='help'?' on':''}" data-a="tab" data-t="help">Aiuto</button></div><button class="lnk" onclick="logout()" style="float:right;margin-top:6px">Esci</button>`;
+function viewProg(){
+  const W=weekly(8),mx=Math.max(1,...W.map(w=>w.vol)),tg=S.tgt||3;
+  const co=coach().map(x=>`<li>${x}</li>`).join('');
+  const bars=W.map((w,i)=>`<div class="bc"><span class="bv">${w.vol?kfmt(w.vol):''}</span><div class="bb" style="height:${Math.max(2,w.vol/mx*80)}%${i===W.length-1?';opacity:.55':''}"></div></div>`).join('');
+  const dates=`<div class="bl">${W.map(w=>`<span>${fdm(w.k)}</span>`).join('')}</div>`;
+  const rows=W.slice().reverse().map((w,i,a)=>{const pr=a[i+1],d=i>0&&pr&&pr.vol>0&&w.vol>0?(w.vol-pr.vol)/pr.vol:null;
+    return `<div class="wrow"><span><b>Sett. ${fdm(w.k)}</b>${i===0?' · in corso':''}</span><span>${w.c}/${tg} allen. · ${w.sets} serie${w.vol?' · '+Math.round(w.vol).toLocaleString('it-IT')+' kg':''}${d!=null?` <i class="${d>=0?'up':'dn'}">${d>=0?'+':''}${Math.round(d*100)}%</i>`:''}</span></div>`}).join('');
+  const E=exData(),ids=Object.keys(E).sort((a,b)=>Object.keys(E[b].w).length-Object.keys(E[a].w).length);
+  let ex='<div class="empty" style="padding:10px">Segna kg e ripetizioni e spunta le serie: qui vedrai come cresce ogni esercizio.</div>';
+  if(ids.length){
+    const id=E[S.ex]?S.ex:ids[0],o=E[id],mxk=Math.max(1,...W.map(w=>o.w[w.k]?o.w[w.k].kg:0));
+    const b2=W.map(w=>{const v=o.w[w.k]?o.w[w.k].kg:0;return `<div class="bc"><span class="bv">${v||''}</span><div class="bb" style="height:${Math.max(2,v/mxk*80)}%"></div></div>`}).join('');
+    const best=Object.values(o.w).sort((a,b)=>b.r1-a.r1)[0];
+    ex=`<select class="rsl sel" data-f="exsel">${ids.map(i=>`<option value="${esc(i)}"${i===id?' selected':''}>${esc(E[i].n)}</option>`).join('')}</select><div class="bars" style="height:110px">${b2}</div>${dates}<p class="hint" style="margin:8px 0 0">Peso massimo per settimana. Miglior serie: ${esc(best.best)} (kg × rip.)</p>`;
+  }
+  return `${tabs('prog')}<h1 data-a="dev">Pro<b>gressi</b></h1><p class="sub">Il tuo andamento, settimana per settimana.</p>
+  <div class="card coach"><b>🧠 Il tuo coach</b><ul>${co}</ul>
+  <p class="hint" style="margin:12px 0 0">Obiettivo: <select class="rsl" data-f="tgt">${[1,2,3,4,5,6].map(n=>`<option value="${n}"${n===tg?' selected':''}>${n}</option>`).join('')}</select> allenamenti a settimana</p></div>
+  <div class="lab">Volume per settimana (kg)</div><div class="card"><div class="bars">${bars}</div>${dates}<p class="hint" style="margin:8px 0 0">Kg × ripetizioni delle serie fatte. L'ultima barra è la settimana in corso.</p></div>
+  <div class="lab">Settimana per settimana</div><div class="card">${rows}</div>
+  <div class="lab">Per esercizio</div><div class="card">${ex}</div>
+  ${setBox()}
+  ${simBox()}
+  <p class="hint">Consigli automatici basati sui tuoi dati: non sostituiscono un allenatore o il parere di un medico.</p>`;
+}
+function setBox(){
+  return `<details class="card" style="margin-top:12px"><summary>⚙️ Impostazioni e backup</summary>
+  <p class="hint" style="margin-top:8px">I tuoi dati sono salvati solo su questo telefono, nel browser. Fai un backup ogni tanto: se cambi telefono o svuoti il browser puoi ripristinare tutto.</p>
+  <button class="ghost" style="width:100%;margin-bottom:8px" data-a="bk">Copia backup</button>
+  <textarea id="rst" rows="3" placeholder="Per ripristinare: incolla qui il backup copiato"></textarea>
+  <button class="ghost" style="width:100%;margin:8px 0" data-a="rs">Ripristina dal backup</button>
+  <button class="ghost dng" style="width:100%" data-a="wipe">${window._wp?'Tocca ancora per cancellare tutto':'Cancella tutti i dati'}</button>
+  <p class="hint" style="margin-top:10px">Consiglio: dal menu del browser scegli «Aggiungi a schermata Home» per aprirla come un'app. Durante l'allenamento lo schermo resta acceso, se il telefono lo permette.</p></details>`;
+}
+function simBox(){
+  if(!S.dev)return '';
+  const ks=Object.keys(S.prog||{}).filter(k=>{const a=k.split(':');return TPL[a[0]]&&TPL[a[0]][a[1]]});
+  const rows=ks.map(k=>{const a=k.split(':'),pi=progInfo(a[0],a[1]);
+    return `<div class="wrow" style="align-items:center"><span><b>${esc(TPL[a[0]][a[1]].n)}</b><br><small style="color:var(--mu)">${GOALS[a[0]].n} · sett. ${pi.wk}${pi.due?' · pronta al cambio':''}</small></span><span><button class="ghost" style="padding:8px 10px;font-size:12px" data-a="sim" data-key="${esc(k)}">Simula ${S.every||6} sett.</button> <button class="ghost" style="padding:8px 10px;font-size:12px" data-a="unsim" data-key="${esc(k)}">Reset</button></span></div>`}).join('');
+  return `<details class="card" style="margin-top:12px"><summary>🧪 Prova il cambio scheda</summary><p class="hint" style="margin-top:8px">Per vedere cosa succede dopo ${S.every||6} settimane: tocca «Simula ${S.every||6} sett.» sulla scheda, poi vai su Allenamento e avviala. Si apre la nuova scheda con gli esercizi aggiornati. «Reset» riporta la scheda a quella di partenza.</p>${rows||'<p class="hint">Prima avvia una scheda dalla home: poi qui potrai simulare il cambio.</p>'}</details>`;
+}
+let AI;
+const fmt=t=>esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/^[-*] /gm,'• ').replace(/\n/g,'<br>');
+const aiErr=c=>({not_granted:'Il coach AI non è stato autorizzato per questa app.',sampling_disabled:'Il coach AI non è disponibile con questo account.',rate_limited:'Troppe richieste o limite di utilizzo raggiunto: riprova più tardi.',session_expired:'Devi accedere di nuovo a Claude.',refused:'Non posso rispondere a questa richiesta: prova a riformularla.',invalid_json:'Non sono riuscito a creare la scheda: prova con una richiesta più semplice.',empty_completion:'Nessuna risposta: prova a riformulare.',prompt_too_large:'La richiesta è troppo lunga.'})[c]||'Problema di connessione: riprova tra poco.';
+const AI_RULES="Sei Gym Coach AI, il coach intelligente di TheGoat. Il tuo compito principale è aiutare principianti a creare allenamenti semplici, realistici e personalizzati. Sei il coach di TheGoat, un'app per allenarsi in palestra. Parla in italiano con tono amichevole e semplice, pensando a chi è principiante. Risposte brevi (massimo 150 parole) con passi chiari. Dai solo indicazioni generali e prudenti: niente diagnosi, consigli medici, diete o integratori; se la persona ha dolore, infortuni o patologie, consiglia di sentire un medico o un istruttore. Se ti chiedono di un macchinario, spiega com'è fatto, come si regola e come si esegue in 3-4 punti, con gli errori più comuni. Suggerisci sempre di partire con carichi leggeri. Rispondi solo su allenamento in palestra.";
+function aiCtx(){
+  const L=S.sessions.slice(0,5).map(x=>x.date+' '+(x.name||'Allenamento')+': '+x.exercises.map(e=>e.name).filter(Boolean).join(', ')).join(' | ');
+  return 'Contesto dell\'app (usalo solo se utile): obiettivo scelto '+GOALS[S.goal||'ipertrofia'].n+'; allenamenti a settimana: '+(S.tgt||3)+'; ultime sessioni: '+(L||'nessuna')+'.';
+}
+function planPrompt(q){
+  return AI_RULES+'\n\n'+aiCtx()+'\n\nRICHIESTA DELLA PERSONA: '+q+'\n\nCrea UNA scheda per una sessione di allenamento. Rispondi SOLO con JSON in questo formato: {"name":"nome breve","goal":"ipertrofia|forza|esplosivita|cardio","exercises":[{"name":"...","sets":3,"rest":90}],"note":"2-3 frasi semplici per un principiante: come eseguire la scheda, quante ripetizioni circa fare e un avviso di prudenza"}. Regole: massimo 8 esercizi (4-6 per i principianti), preferisci macchine guidate ai pesi liberi per chi inizia, serie da 2 a 5, recupero in secondi (esercizi principali 90-180, complementari 45-90). Usa se possibile questi nomi esatti: '+DEF.join(', ')+'.';
+}
+function cleanPlan(o){
+  if(!o||!Array.isArray(o.exercises))return null;
+  const near=r=>RS.reduce((a,b)=>Math.abs(b-r)<Math.abs(a-r)?b:a);
+  const ex=o.exercises.slice(0,10).map(e=>({name:String(e&&e.name||'').trim().slice(0,60),sets:Math.min(8,Math.max(1,Math.round(+e.sets||3))),rest:near(Math.min(300,Math.max(30,Math.round(+e.rest||90))))})).filter(e=>e.name);
+  if(!ex.length)return null;
+  return{name:String(o.name||'Scheda del coach').slice(0,40),goal:GOALS[o.goal]?o.goal:'ipertrofia',note:String(o.note||'').slice(0,600),exercises:ex};
+}
+const chatHTML=()=>(S.chat||[]).map(m=>`<div class="msg ${m.r}">${fmt(m.t)}</div>`).join('')||'<p class="hint" style="margin:0">Fai una domanda o scegli un suggerimento qui sopra.</p>';
+function planHTML(){
+  const P=window._ai&&window._ai.plan;if(!P)return '';
+  return `<div class="card"><b>🧩 ${esc(P.name)}</b><p class="hint" style="margin:6px 0 8px">${fmt(P.note)}</p>${P.exercises.map(e=>`<div class="wrow"><span>${esc(e.name)}</span><span>${e.sets} serie · rec. ${mmss(e.rest)}</span></div>`).join('')}<button class="btn" style="margin:12px 0 8px" data-a="aimake">Crea la sessione</button><button class="ghost" style="width:100%;margin-bottom:8px;border-color:var(--ac);color:var(--ac)" data-a="airegen">🔄 Genera un’altra scheda</button><button class="ghost" style="width:100%" data-a="aidrop">Scarta</button></div>`;
+}
+function smartPlan(q){
+  const x=(q||'').toLowerCase();
+  const goal=/forza/.test(x)?'forza':/cardio|dimagr|fiato|resistenza/.test(x)?'cardio':/esplos|potenza/.test(x)?'esplosivita':'ipertrofia';
+  const machines=/macchin|guidat|principiant|iniz/.test(x);
+  // Durata richiesta: il Coach adatta numero di esercizi e volume al tempo disponibile.
+  let targetMin=null;
+  if(/un[’'\s-]*ora|1\s*ora|1h\b/.test(x)) targetMin=60;
+  else if(/un[’'\s-]*ora\s*e\s*mezz|1\s*ora\s*e\s*mezz|1h\s*30/.test(x)) targetMin=90;
+  else {
+    const tm=x.match(/\b(20|25|30|35|40|45|50|55|60|65|70|75|80|90|100|120)\s*(?:min|minuti|m)\b/);
+    if(tm) targetMin=+tm[1];
+  }
+  let pool,name;
+
+  // Se vengono nominati muscoli precisi, usa SOLO quei gruppi (anche combinati tra loro).
+  const GP={
+    petto:['Chest press machine','Chest press inclinata (macchina)','Pec deck (macchina croci)','Croci ai cavi','Croci ai cavi dal basso','Panca piana manubri','Panca inclinata manubri','Panca piana bilanciere','Push-up'],
+    schiena:['Lat machine','Lat machine presa stretta','Trazioni assistite','Trazioni alla sbarra','Row machine petto appoggiato','Row machine presa larga','Pulley basso','Pulley presa stretta','Rematore ai cavi un braccio','Rematore manubrio','Face pull'],
+    spalle:['Shoulder press machine','Military press','Lento avanti manubri','Alzate laterali','Alzate laterali ai cavi','Alzate laterali (macchina)','Alzate frontali','Alzate posteriori','Reverse pec deck (macchina)','Face pull'],
+    bicipiti:['Curl manubri','Curl bilanciere','Curl a martello','Curl ai cavi','Curl panca Scott (macchina)','Curl panca inclinata','Curl concentrato'],
+    tricipiti:['Pushdown ai cavi','Pushdown con corda','Estensioni sopra la testa ai cavi','French press','Kickback manubrio','Tricipiti (macchina)','Dip assistiti (macchina)','Dip alla panca'],
+    avambracci:['Wrist curl manubri','Reverse wrist curl manubri','Reverse curl bilanciere','Farmer walk'],
+    quadricipiti:['Squat','Hack squat','Leg press','Leg extension','Squat al multipower','Goblet squat','Squat bulgaro','Affondi','Step-up'],
+    femorali:['Stacco rumeno','Leg curl','Leg curl seduto','Ponte glutei'],
+    glutei:['Hip thrust','Hip thrust (macchina)','Glute kickback ai cavi','Abductor machine (esterno coscia)','Ponte glutei','Squat bulgaro','Affondi'],
+    polpacci:['Calf in piedi','Calf seduto','Calf alla leg press','Calf a corpo libero'],
+    addome:['Plank','Crunch','Crunch ai cavi','Crunch (macchina)','Sollevamento gambe','Russian twist','Ab wheel','Rotazioni ai cavi (woodchop)'],
+    lombari:['Iperestensioni (panca lombare)','Stacco rumeno','Ponte glutei'],
+    gambe:['Leg press','Hack squat','Leg extension','Squat','Squat al multipower','Goblet squat','Squat bulgaro','Affondi','Stacco rumeno','Leg curl','Leg curl seduto','Hip thrust','Hip thrust (macchina)','Glute kickback ai cavi','Calf in piedi','Calf seduto','Calf alla leg press'],
+    braccia:['Curl manubri','Curl a martello','Curl ai cavi','Curl panca Scott (macchina)','Pushdown ai cavi','Pushdown con corda','Estensioni sopra la testa ai cavi','Tricipiti (macchina)','Wrist curl manubri','Reverse curl bilanciere']
+  };
+  const labels={petto:'Petto',schiena:'Dorso / Schiena',spalle:'Spalle',bicipiti:'Bicipiti',tricipiti:'Tricipiti',avambracci:'Avambracci',quadricipiti:'Quadricipiti',femorali:'Femorali',glutei:'Glutei',polpacci:'Polpacci',addome:'Addome',lombari:'Lombari',gambe:'Gambe',braccia:'Braccia'};
+  const tests={
+    petto:/\bpetto\b|pettoral/,
+    schiena:/schien|dors[oi]|latissim|trapez|romboid/,
+    spalle:/spall|deltoid/,
+    bicipiti:/bicip|brachiale/,
+    tricipiti:/tricip/,
+    avambracci:/avambracc|flessor.*polso|estensori?.*polso/,
+    quadricipiti:/quadric|anteriore.*coscia/,
+    femorali:/femoral|ischiocrural|posteriore.*coscia/,
+    glutei:/glute/,
+    polpacci:/polpacc|gastrocnem|soleo/,
+    addome:/addom|\bcore\b|obliqu/,
+    lombari:/lombar|erettor.*spinal|stabilizzator.*tronco/,
+    gambe:/\bgambe?\b|lower legs/,
+    braccia:/\bbracci[ao]\b/
+  };
+  let specific=Object.keys(tests).filter(k=>tests[k].test(x));
+  // Se viene chiesto un gruppo ampio, evita di duplicarlo con i sottogruppi citati nella stessa frase.
+  if(specific.includes('gambe')) specific=specific.filter(k=>!['quadricipiti','femorali','glutei','polpacci'].includes(k));
+  if(specific.includes('braccia')) specific=specific.filter(k=>!['bicipiti','tricipiti','avambracci'].includes(k));
+  const broadUpper=/parte alta|corpo superiore|upper body|\bupper\b|tronco/.test(x);
+  const broadLower=/parte bassa|corpo inferiore|lower body|\blower\b/.test(x);
+
+  if(specific.length && !broadUpper && !broadLower){
+    name=specific.map(k=>labels[k]).join(' + ')+' · Coach AI';
+    pool=[];
+    specific.forEach(k=>pool.push(...GP[k]));
+    pool=[...new Set(pool)];
+    if(machines){
+      const guided=pool.filter(z=>/machine|macchina|cavi|lat machine|leg press|leg extension|leg curl|hack squat|pulley|assistit|calf seduto/i.test(z));
+      if(guided.length>=Math.min(4,pool.length))pool=guided;
+    }
+  }
+  else if(broadUpper){name='Parte alta · Coach AI';pool=machines?['Chest press machine','Chest press inclinata (macchina)','Lat machine','Lat machine presa stretta','Row machine petto appoggiato','Row machine presa larga','Shoulder press machine','Alzate laterali (macchina)','Reverse pec deck (macchina)','Curl panca Scott (macchina)','Tricipiti (macchina)','Dip assistiti (macchina)']:['Chest press machine','Panca inclinata manubri','Lat machine','Pulley basso','Rematore manubrio','Shoulder press machine','Alzate laterali','Face pull','Curl manubri','Curl a martello','Pushdown con corda','Estensioni sopra la testa ai cavi'];}
+  else if(broadLower){name='Parte bassa · Coach AI';pool=machines?['Leg press','Hack squat','Leg extension','Leg curl seduto','Leg curl','Hip thrust (macchina)','Abductor machine (esterno coscia)','Adductor machine (interno coscia)','Calf alla leg press','Calf seduto']:['Squat','Goblet squat','Squat bulgaro','Affondi','Stacco rumeno','Leg press','Leg curl','Hip thrust','Ponte glutei','Calf in piedi'];}
+  else if(/push|spinta/.test(x)){name='Push · Coach AI';pool=['Chest press machine','Panca inclinata manubri','Shoulder press machine','Alzate laterali','Pushdown con corda','Tricipiti (macchina)'];}
+  else if(/pull|tirata/.test(x)){name='Pull · Coach AI';pool=['Lat machine','Row machine petto appoggiato','Pulley basso','Face pull','Curl manubri','Curl panca Scott (macchina)'];}
+  else if(goal==='cardio'){name='Cardio · Coach AI';pool=['Tapis roulant','Cyclette','Vogatore (remoergometro)','Plank'];}
+  else {name='Full body · Coach AI';pool=machines?['Leg press','Chest press machine','Lat machine','Leg curl seduto','Shoulder press machine','Crunch (macchina)']:['Leg press','Chest press machine','Lat machine','Stacco rumeno','Shoulder press machine','Plank'];}
+
+  // Circa 8-10 min di riscaldamento + parte centrale. Il numero di esercizi cresce con la durata.
+  const duration=targetMin||50;
+  let n=duration<=25?3:duration<=35?4:duration<=45?5:duration<=60?6:duration<=75?7:8;
+  n=Math.min(n,pool.length);
+  pool=pool.slice().sort(()=>Math.random()-.5);
+  const reps=goal==='forza'?'5-6':goal==='esplosivita'?'4-6 veloci':goal==='cardio'?'8-12 min':'8-12';
+  const exercises=pool.slice(0,n).map((z,i)=>({name:z,sets:goal==='forza'?(i<2?4:3):goal==='cardio'?1:(duration>=75&&i<2?4:3),rest:goal==='forza'?(i<2?180:120):goal==='esplosivita'?120:goal==='cardio'?60:(i<2?120:75)}));
+  const focus=specific.length&&!broadUpper&&!broadLower?' Solo esercizi per: '+specific.map(k=>labels[k]).join(', ')+'.':'';
+  const timing=targetMin?` Durata obiettivo: circa ${targetMin} minuti totali, compresi 8-10 minuti di riscaldamento.`:` Durata stimata: circa ${duration} minuti totali.`;
+  return {name,goal,exercises,note:`Scheda pensata per ${machines?'chi inizia e preferisce movimenti guidati':'una seduta semplice e completa'}.${focus}${timing} Fai circa ${reps} ripetizioni per serie${goal==='cardio'?' o il tempo indicato':''}, scegliendo un carico che ti permetta tecnica pulita e 2-3 ripetizioni ancora possibili. Se senti dolore, fermati e chiedi a un istruttore o medico.`};
+}
+function smartBuilder(){
+  const A=window._ai=window._ai||{};
+  const chips=['Solo petto · 45 minuti','Dorso + bicipiti · macchinari','Spalle + tricipiti','Quadricipiti + femorali','Glutei + polpacci','Addome + lombari'];
+  return `<div class="lab">Coach AI · crea la tua scheda</div><div class="chips">${chips.map(c=>`<button class="chip" data-a="smartchip" data-q="${esc(c)}">${esc(c)}</button>`).join('')}</div><textarea id="smartq" rows="3" placeholder="Es. Sono principiante, voglio massa, 3 giorni a settimana, 50 minuti e preferisco macchinari">${esc(A.smartq||'')}</textarea><button class="btn" data-a="smartmake" style="margin-top:8px">✨ Genera la mia scheda</button><div id="smartplan">${planHTML()}</div><p class="hint">Modalità Smart locale: genera la scheda direttamente sul telefono. Il collegamento AI online aggiungerà conversazione e personalizzazione ancora più avanzata.</p>`;
+}
+function viewHelp(){
+  const A=window._ai||{};
+  let body;
+  if(AI===undefined)body='<div class="card"><p class="hint" style="margin:0">Controllo se il coach è disponibile…</p></div>';
+  else if(!AI)body=`<div class="card"><b>✨ Gym Coach AI</b><p class="hint" style="margin:6px 0 10px">Il coach è pronto in modalità Smart. Descrivi cosa vuoi allenare e crea subito una scheda. Quando collegherai il servizio AI online, questa stessa schermata diventerà conversazionale in tempo reale.</p><button class="btn" data-a="smartstart" style="margin:0">🧩 Crea una scheda personalizzata</button></div>
+    <div class="card"><b>Per partire bene</b><p class="hint" style="margin:6px 0 0">Puoi scrivere cose come: “principiante, 3 giorni, massa, 50 minuti, solo macchinari” oppure “gambe, 40 minuti, palestra completa”.</p></div>${smartBuilder()}`;
+  else{
+    const chips=['Sono principiante: fammi una scheda da 3 giorni','Ho 45 minuti: scheda per petto e spalle','Scheda solo con macchinari guidati','Voglio aumentare massa: da dove inizio?','Come si usa la leg press?'];
+    body=`<div class="chips">${chips.map(c=>`<button class="chip" data-a="aichip" data-q="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+    <div class="card" id="chat">${chatHTML()}</div>
+    <textarea id="aiq" data-f="aiq" rows="3" placeholder="Scrivi cosa ti serve: es. «scheda gambe per principianti, 50 minuti»">${esc(A.q||'')}</textarea>
+    <div class="row" style="margin:8px 0">
+      <button class="ghost" id="aiAsk" data-a="ask">💬 Chiedi</button>
+      <button class="ghost" id="aiMk" data-a="mk" style="border-color:var(--ac);color:var(--ac)">🧩 Crea scheda</button>
+      <button class="ghost" id="aiStop" data-a="stop" hidden>■ Stop</button>
+    </div>
+    <div id="aiplan">${planHTML()}</div>
+    ${(S.chat||[]).length?'<button class="lnk" data-a="aiclear">Nuova conversazione</button>':''}
+    <p class="hint">Il coach è un\'intelligenza artificiale e può sbagliare. Per dolori, infortuni o dubbi chiedi a un istruttore o a un medico. Usa il tuo account Claude: ogni richiesta consuma un po\' del tuo utilizzo.</p>`;
+  }
+  return `${tabs('help')}<h1>Il tuo <b>coach</b></h1><p class="sub">Chiedi consigli o fatti creare una scheda su misura. Pensato per chi inizia.</p>${body}`;
+}
+function setBusy(b){
+  ['#aiAsk','#aiMk'].forEach(q=>{const e=$(q);if(e)e.disabled=b});
+  const st=$('#aiStop');if(st)st.hidden=!b;
+}
+async function aiAsk(mode){
+  const A=window._ai=window._ai||{},qe=$('#aiq'),q=((qe&&qe.value)||'').trim();
+  if(!q||!AI||A.busy)return;
+  A.busy=true;A.ctl=new AbortController();setBusy(true);
+  try{
+    if(mode==='chat'){
+      S.chat=(S.chat||[]).slice(-9);S.chat.push({r:'u',t:q});save();
+      $('#chat').innerHTML=chatHTML()+'<div class="msg a" id="live">Sto pensando…</div>';
+      const turns=S.chat.map(m=>({role:m.r==='u'?'user':'assistant',content:m.t}));
+      while(turns.length&&turns[0].role!=='user')turns.shift();
+      turns[0]={role:'user',content:AI_RULES+'\n\n'+aiCtx()+'\n\n---\n'+turns[0].content};
+      qe.value='';A.q='';
+      try{
+        const r=await AI(turns,{cache:false,modelTier:'quick',signal:A.ctl.signal,onText:o=>{const l=$('#live');if(l)l.innerHTML=fmt(o.text)}});
+        S.chat.push({r:'a',t:r.text});
+      }catch(e){
+        if(e&&e.text)S.chat.push({r:'a',t:e.text});
+        if(!e||e.code!=='cancelled')toast(aiErr(e&&e.code));
+      }
+      save();$('#chat').innerHTML=chatHTML();
+    }else{
+      $('#aiplan').innerHTML='<div class="card"><p class="hint" style="margin:0">🧩 Sto preparando la tua scheda… può servire qualche secondo.</p></div>';
+      try{
+        const P=cleanPlan(await AI.json(planPrompt(q),{cache:false,modelTier:'default',signal:A.ctl.signal}));
+        if(!P)throw{code:'invalid_json'};
+        A.plan=P;
+      }catch(e){A.plan=null;if(!e||e.code!=='cancelled')toast(aiErr(e&&e.code))}
+      $('#aiplan').innerHTML=planHTML();
+    }
+  }finally{A.busy=false;setBusy(false)}
+}
+function coachChip(){
+  if(!S.sessions.some(x=>stats(x).sets))return '';
+  const W=weekly(1),tg=S.tgt||3;
+  return `<button class="sess" data-a="tab" data-t="prog" style="margin-top:14px"><b>🧠 Questa settimana: ${W[0].c}/${tg} allenamenti</b><small>${esc((coach()[1]||'').replace(/^[^A-Za-z0-9]+/,''))||'Tocca per vedere i progressi'}</small></button>`;
+}
+const IOS=/iPad|iPhone|iPod/.test(navigator.userAgent||'')||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const qTxt=n=>n.trim()+' macchinario palestra';
+const bingU=n=>'https://www.bing.com/images/search?q='+encodeURIComponent(qTxt(n));
+function copyTxt(x,msg){const ok=()=>toast(msg);const fb=()=>{try{const t=document.createElement('textarea');t.value=x;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();ok()}catch(e){toast('Copia non disponibile')}};try{navigator.clipboard.writeText(x).then(ok,fb)}catch(e){fb()}}
+const gl=(n,k)=>k==='i'?(IOS?'x-safari-':'')+bingU(n):'https://www.youtube.com/results?search_query='+encodeURIComponent(n.trim()+' tecnica esecuzione corretta');
+function pickList(p){
+  const q=(p.q||'').trim().toLowerCase();
+  const cs=cur(),allowed=cs&&cs.tpl?tplGroups(cs.goal||'ipertrofia',cs.tpl):Object.keys(GR),tplKey=cs&&cs.tpl?cs.tpl:null;
+  const row=x=>{const n=exn(x),t=ext(x);return `<div class="px"><button class="ghost" data-a="pex" data-n="${esc(n)}">+ ${esc(n)}${t?` <i>${t}</i>`:''}</button><a class="ph" href="${gl(n,'i')}" data-q="i" data-n="${esc(n)}" ${IOS?'':'target="_blank" '}rel="noopener" aria-label="Foto">📷</a></div>`};
+  if(q){const r=[];allowed.forEach(k=>GR[k]&&GR[k].e.forEach(x=>{if(tplExerciseAllowed(tplKey,exn(x))&&(exn(x).toLowerCase().includes(q)||ext(x).includes(q)||k.toLowerCase().includes(q)))r.push(x)}));
+    return r.length?`<div class="exl">${r.map(row).join('')}</div>`:'<p class="hint">Nessun risultato in questa scheda: prova con un altro nome.</p>'}
+  const g=p.g&&allowed.includes(p.g)&&GR[p.g];
+  if(!g)return '<p class="hint">Scegli un gruppo muscolare, oppure cerca per nome o per tipo (macchina, cavi, pesi liberi…). Tocca 📷 per vedere com\'è fatto il macchinario.</p>';
+  return `<p class="hint">Si abbina bene con: ${g.p.map(k=>`<button class="chip sm" data-a="pg" data-g="${esc(k)}">${esc(k)}</button>`).join(' ')}<br>${esc(g.t)}</p><div class="exl">${g.e.filter(x=>tplExerciseAllowed(tplKey,exn(x))).map(row).join('')}</div>`;
+}
+function pickCard(p,title,swapIdx){
+  const cs=cur(),allowed=cs&&cs.tpl?tplGroups(cs.goal||'ipertrofia',cs.tpl):Object.keys(GR);
+  if(p.g&&!allowed.includes(p.g))p.g=null;
+  const chips=allowed.map(k=>`<button class="chip${k===p.g?' on':''}" data-a="pg" data-g="${esc(k)}">${esc(k)}</button>`).join('');
+  const close=swapIdx!=null?`data-a="swap" data-e="${swapIdx}"`:'data-a="addex"';
+  return `<div class="card" style="margin-top:10px"><b>${title}</b><input class="srch" data-f="psearch" value="${esc(p.q||'')}" placeholder="Cerca: es. leg press, cavi, macchina…" style="margin-top:10px"><div class="chips">${chips}</div><div id="pl">${pickList(p)}</div><button class="lnk" ${close}>Chiudi</button></div>`;
+}
+function picker(){
+  const p=window._pk;
+  if(!p||p.swap!=null)return `<button class="btn" data-a="addex">+ Esercizio</button>`;
+  return pickCard(p,'Aggiungi esercizio');
+}
+function viewSession(s){
+  const ex=s.exercises.map((e,i)=>{
+    const pv=prevSets(e.name,s.id);
+    const rows=e.sets.map((t,j)=>{const p=pv&&pv[j],ru=S.run&&S.run.id===s.id&&S.run.e===i&&S.run.s===j;
+      return `<div class="set"><span class="n">${j+1}</span>
+      <input inputmode="decimal" data-e="${i}" data-s="${j}" data-f="kg" value="${esc(t.kg)}" placeholder="${p&&p.kg!==''?esc(p.kg):'kg'}" aria-label="Peso serie ${j+1}">
+      <input inputmode="numeric" data-e="${i}" data-s="${j}" data-f="reps" value="${esc(t.reps)}" placeholder="${p&&p.reps!==''?esc(p.reps):'rep'}" aria-label="Ripetizioni serie ${j+1}">
+      <button class="chk${t.done?' on':''}${ru?' run':''}" data-a="chk" data-e="${i}" data-s="${j}" aria-label="Serie fatta">${ru?'✓ '+mmss(Math.max(0,Math.ceil((S.run.end-Date.now())/1000))):'✓'}</button></div>`}).join('');
+    return `<section class="card"><div class="exh"><input class="exn" list="exl" data-e="${i}" data-f="name" value="${esc(e.name)}" placeholder="Nome esercizio"><button class="ic" data-a="swap" data-e="${i}" aria-label="Cambia esercizio">🔄</button><button class="ic${window._dx===i?' cf':''}" data-a="delex" data-e="${i}" aria-label="Elimina esercizio">${window._dx===i?'Elimina?':'✕'}</button></div>${window._pk&&window._pk.swap===i?pickCard(window._pk,'Cambia con…',i):''}${e.name.trim()?`<p class="lks"><a href="${gl(e.name,'i')}" data-q="i" data-e="${i}" ${IOS?'':'target="_blank" '}rel="noopener">📷 Foto macchinario</a>${IOS?`<a data-a="cplink" data-e="${i}">🔗 Copia link</a>`:''}<a href="${gl(e.name,'v')}" data-q="v" data-e="${i}" target="_blank" rel="noopener">▶ Video tecnica</a></p>`:''}<p class="hint">Recupero <select class="rsl" data-f="rest" data-e="${i}">${RS.map(v=>`<option value="${v}"${v===(e.rest||S.rest)?' selected':''}>${mmss(v)}</option>`).join('')}</select></p>${sug(e,pv,s.goal)}
+    <div class="set hd"><span></span><span>KG</span><span>REP</span><span></span></div>${rows}
+    <div class="row"><button class="ghost" data-a="addset" data-e="${i}">+ Serie</button><button class="ghost" data-a="delset" data-e="${i}">− Serie</button></div></section>`}).join('');
+  const t=stats(s);
+  return `<div class="top"><button class="lnk" data-a="back">‹ Sessioni</button><button class="lnk dng" data-a="del">${window._conf?'Tocca ancora per eliminare':'Elimina'}</button></div>
+  <div class="two"><input data-f="sname" value="${esc(s.name)}" placeholder="Nome (es. Push day)" style="font-weight:700"><input type="date" data-f="sdate" value="${esc(s.date)}"></div>
+  <p class="hint">I numeri in grigio sono quelli dell'ultima volta. A serie finita tocca ✓: parte il recupero. Se hai sbagliato, tocca di nuovo ✓ per annullare.</p>
+  ${s.tpl?plan(s):''}
+  ${ex}
+  ${picker()}
+  ${s.tpl?`<button class="btn" data-a="savetpl">💾 Salva modifiche alla scheda</button><p class="hint">Le modifiche fatte qui a esercizi, serie e recuperi diventeranno la tua scheda ${esc(s.name)} anche per i prossimi allenamenti.</p>`:''}
+  <div class="card" style="border-left:4px solid var(--ac)"><b>🧘 Non dimenticare l'allungamento dei muscoli allenati!</b></div>
+  <textarea data-f="notes" rows="3" placeholder="Note della sessione (sensazioni, carichi da aumentare…)">${esc(s.notes||'')}</textarea>
+  <p class="sub" id="st" style="margin-top:10px">${t.sets} serie fatte${t.vol?' · volume '+Math.round(t.vol).toLocaleString('it-IT')+' kg':''}</p>
+  <button class="ghost" style="width:100%" data-a="copy">Copia riepilogo</button>`;
+}
+function render(){
+  const s=cur();
+  if(S.cur&&!s)S.cur=null;
+  $('#app').innerHTML=s?viewSession(s):(S.tab==='prog'?viewProg():S.tab==='help'?viewHelp():viewHome());
+  wake(!!s);
+  let names;
+  if(s&&s.tpl){const allowed=tplGroups(s.goal||'ipertrofia',s.tpl);names=new Set(allowed.flatMap(k=>GR[k]?GR[k].e.map(exn).filter(n=>tplExerciseAllowed(s.tpl,n)):[]));s.exercises.forEach(e=>e.name.trim()&&names.add(e.name.trim()))}
+  else{names=new Set(DEF);S.sessions.forEach(x=>x.exercises.forEach(e=>e.name.trim()&&names.add(e.name.trim())));Object.values(TPL).forEach(g=>Object.values(g).forEach(t=>t.ex.forEach(x=>names.add(x[0]))))}
+  $('#exl').innerHTML=[...names].map(n=>`<option value="${esc(n)}">`).join('');
+}
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),1600)}
+
+/* recupero per riga */
+let tInt=null,AC=null;
+const mmss=n=>Math.floor(n/60)+':'+String(n%60).padStart(2,'0');
+const RS=[45,60,75,90,120,150,180,240];
+const stTxt=s=>{const t=stats(s);return t.sets+' serie fatte'+(t.vol?' · volume '+Math.round(t.vol).toLocaleString('it-IT')+' kg':'')};
+function unlock(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume()}catch(e){}}
+function alarm(){
+  try{navigator.vibrate&&navigator.vibrate([300,120,300,120,300])}catch(e){}
+  try{if(!AC)return;[0,.35,.7].forEach(d=>{const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=880;g.gain.value=.25;o.connect(g);g.connect(AC.destination);o.start(AC.currentTime+d);o.stop(AC.currentTime+d+.2)})}catch(e){}
+}
+function tick(){
+  if(!S.run)return;
+  const l=Math.ceil((S.run.end-Date.now())/1000);
+  if(l<=0){finish(true);return}
+  const b=document.querySelector(`.chk[data-e="${S.run.e}"][data-s="${S.run.s}"]`);
+  if(b&&S.cur===S.run.id)b.textContent='✓ '+mmss(l);
+}
+function finish(sound){
+  const r=S.run;if(!r)return;
+  clearInterval(tInt);tInt=null;S.run=null;
+  const s=S.sessions.find(x=>x.id===r.id),t=s&&s.exercises[r.e]&&s.exercises[r.e].sets[r.s];
+  if(t)t.done=true;
+  save();
+  if(S.cur===r.id){const b=document.querySelector(`.chk[data-e="${r.e}"][data-s="${r.s}"]`);if(b){b.className='chk on';b.textContent='✓'}const el=$('#st');if(el&&s)el.textContent=stTxt(s)}
+  if(sound)alarm();
+}
+function startRun(id,e,j,sec){clearInterval(tInt);S.run={id:id,e:e,s:j,end:Date.now()+sec*1000};save();tInt=setInterval(tick,250)}
+let WL=null;
+function wake(on){try{if(on){if(!WL&&navigator.wakeLock)navigator.wakeLock.request('screen').then(l=>{WL=l;l.addEventListener('release',()=>{WL=null})}).catch(()=>{})}else if(WL){WL.release();WL=null}}catch(e){}}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){tick();if(S.cur)wake(true)}});
+
+/* actions */
+document.addEventListener('click',ev=>{
+  const q=ev.target.closest('a[data-q]');
+  if(q){const c=cur(),nm=q.dataset.n||(c&&c.exercises[+q.dataset.e].name.trim());if(!nm){ev.preventDefault();return}q.href=gl(nm,q.dataset.q);return}
+  const b=ev.target.closest('[data-a]');if(!b)return;
+  const a=b.dataset.a,s=cur(),i=+b.dataset.e,j=+b.dataset.s;
+  if(a!=='del')window._conf=false;
+  if(a!=='wipe')window._wp=false;
+  if(a!=='delex')window._dx=null;
+  if(!/^(addex|pg|pex|swap)$/.test(a))window._pk=null;
+  if(a==='delset'&&S.run&&cur()&&S.run.id===cur().id){clearInterval(tInt);tInt=null;S.run=null}
+  if(a==='new'){window._pk={g:null};const n={id:uid(),date:today(),name:'',notes:'',exercises:[]};S.sessions.unshift(n);S.cur=n.id}
+  else if(a==='repeat'){const l=S.sessions[0];const n={id:uid(),date:today(),name:l.name,goal:l.goal,tpl:l.tpl,phase:l.phase,notes:'',exercises:l.exercises.map(e=>({name:e.name,reps:e.reps,rest:e.rest,dur:e.dur,sets:e.sets.map(t=>({kg:t.kg,reps:t.reps,done:false}))}))};S.sessions.unshift(n);S.cur=n.id}
+  else if(a==='open'){S.cur=b.dataset.id}
+  else if(a==='tab'){S.tab=b.dataset.t}
+  else if(a==='dev'){window._dv=(window._dv||0)+1;if(window._dv>=5){window._dv=0;S.dev=!S.dev;toast(S.dev?'Modalità prova attivata':'Modalità prova disattivata')}}
+  else if(a==='bk'){const x=JSON.stringify(Object.assign({},S,{cur:null,run:null,dev:false}));
+    const ok=()=>toast('Backup copiato: incollalo in una nota o in un messaggio a te stesso');
+    const fb=()=>{try{const t=document.createElement('textarea');t.value=x;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();ok()}catch(e){toast('Copia non disponibile')}};
+    try{navigator.clipboard.writeText(x).then(ok,fb)}catch(e){fb()}return}
+  else if(a==='rs'){try{const o=JSON.parse(($('#rst')||{}).value||'');if(!o||!Array.isArray(o.sessions))throw 0;
+    clearInterval(tInt);tInt=null;S=Object.assign({sessions:[],cur:null,rest:90,goal:'ipertrofia',prog:{},tab:'prog',tgt:3,ex:'',every:6},o,{cur:null,run:null,dev:false});toast('Backup ripristinato')}catch(e){toast('Backup non valido');return}}
+  else if(a==='wipe'){if(!window._wp){window._wp=true;render();return}window._wp=false;clearInterval(tInt);tInt=null;
+    S={sessions:[],cur:null,rest:90,goal:'ipertrofia',prog:{},tab:'home',tgt:3,ex:'',every:6};toast('Dati cancellati')}
+  else if(a==='cplink'){const nm=s.exercises[i].name.trim();if(nm)copyTxt(bingU(nm),'Link copiato: incollalo in Safari');return}
+  else if(a==='smartstart'){const q=$('#smartq');if(q){q.focus();q.scrollIntoView({behavior:'smooth',block:'center'})}return}
+  else if(a==='smartchip'){const A=window._ai=window._ai||{};A.smartq=b.dataset.q;render();return}
+  else if(a==='smartmake'){const A=window._ai=window._ai||{},q=(($('#smartq')||{}).value||A.smartq||'').trim();if(!q){toast('Scrivi prima cosa vuoi allenare');return}A.smartq=q;A.plan=smartPlan(q);render();return}
+  else if(a==='ask'){aiAsk('chat');return}
+  else if(a==='mk'){aiAsk('plan');return}
+  else if(a==='stop'){if(window._ai&&window._ai.ctl)window._ai.ctl.abort();return}
+  else if(a==='aichip'){const q=$('#aiq');if(q){q.value=b.dataset.q;(window._ai=window._ai||{}).q=b.dataset.q}return}
+  else if(a==='aiclear'){S.chat=[];save();render();return}
+  else if(a==='airegen'){const A=window._ai=window._ai||{},q=(A.smartq||($('#smartq')&&$('#smartq').value)||'').trim();if(q){A.plan=smartPlan(q);render();toast('Nuova scheda generata!')}else if(AI){aiAsk('plan')}return}
+  else if(a==='aidrop'){if(window._ai)window._ai.plan=null;const e=$('#aiplan');if(e)e.innerHTML='';return}
+  else if(a==='aimake'){const P=window._ai&&window._ai.plan;if(!P)return;
+    const n={id:uid(),date:today(),name:P.name,goal:P.goal,notes:P.note,exercises:P.exercises.map(e=>({name:e.name,rest:e.rest,sets:Array.from({length:e.sets},()=>blank())}))};
+    S.sessions.unshift(n);S.cur=n.id;window._ai.plan=null;toast('Sessione creata: buon allenamento!')}
+  else if(a==='sim'){const pr=S.prog[b.dataset.key];if(pr){if(!pr.bak)pr.bak=pr.start;const d=new Date(pr.start+'T12:00:00');d.setDate(d.getDate()-7*(S.every||6));pr.start=dkey(d);toast('Simulate '+(S.every||6)+' settimane: ora avvia la scheda dalla home')}}
+  else if(a==='unsim'){const key=b.dataset.key,pr=S.prog[key];if(pr){const kk=key.split(':'),d=S.sessions.filter(x=>(x.goal||'ipertrofia')===kk[0]&&x.tpl===kk[1]).map(x=>x.date).sort()[0];pr.start=pr.bak||d||today();pr.phase=1;delete pr.bak;delete pr.msg;toast('Scheda riportata a quella di partenza')}}
+  else if(a==='ctedit'){const key=b.dataset.g+':'+b.dataset.k;ensureCustomTpl(b.dataset.g,b.dataset.k);window._editTpl=window._editTpl===key?null:key;save();render();return}
+  else if(a==='ctadd'){const c=ensureCustomTpl(b.dataset.g,b.dataset.k);c.ex.push(['Nuovo esercizio',3,'10',90]);save();render();return}
+  else if(a==='ctdel'){const c=ensureCustomTpl(b.dataset.g,b.dataset.k),i=+b.dataset.i;if(c.ex.length>1)c.ex.splice(i,1);else toast('La scheda deve avere almeno un esercizio');save();render();return}
+  else if(a==='ctsave'){save();toast('Scheda salvata');render();return}
+  else if(a==='ctreset'){const g=b.dataset.g,k=b.dataset.k;if(S.customTpl&&S.customTpl[g])delete S.customTpl[g][k];window._editTpl=null;save();toast('Scheda originale ripristinata');render();return}
+  else if(a==='savetpl'){if(!s||!s.tpl)return;const g=s.goal||'ipertrofia',k=s.tpl,c=ensureCustomTpl(g,k);c.n=s.name||c.n;c.ex=s.exercises.filter(e=>e.name.trim()).map(e=>[e.name.trim(),Math.max(1,e.sets.length),e.reps||'10',e.rest||S.rest,e.dur]);save();toast('Modifiche salvate nella tua scheda');render();return}
+  else if(a==='goal'){S.goal=b.dataset.g}
+  else if(a==='back'){S.cur=null}
+  else if(a==='addex'){window._pk=(window._pk&&window._pk.swap==null)?null:{g:null}}
+  else if(a==='pg'){window._pk={g:b.dataset.g,swap:(window._pk||{}).swap}}
+  else if(a==='swap'){if(window._pk&&window._pk.swap===i){window._pk=null}else{const nm=s.exercises[i].name.trim().toLowerCase();let g=null;Object.keys(GR).forEach(k=>{if(GR[k].e.some(x=>exn(x).toLowerCase()===nm))g=k});window._pk={g:g,swap:i}}}
+  else if(a==='pex'&&window._pk&&window._pk.swap!=null&&s.exercises[window._pk.swap]){const n=b.dataset.n,e=s.exercises[window._pk.swap];e.name=n;e.sets.forEach(t=>{if(!t.done){t.kg='';t.reps=''}});window._pk=null;toast('Cambiato con: '+n)}
+  else if(a==='pex'){const n=b.dataset.n,le=s.exercises.find(e=>!e.name.trim());if(le)le.name=n;else s.exercises.push({name:n,sets:[blank(),blank(),blank()]});toast('Aggiunto: '+n)}
+  else if(a==='tpl'){
+    const g=S.goal||'ipertrofia',k=b.dataset.k,t=getTpl(g,k),key=g+':'+k;
+    if(!S.prog[key]){const d=S.sessions.filter(x=>(x.goal||'ipertrofia')===g&&x.tpl===k).map(x=>x.date).sort()[0];S.prog[key]={start:d||today(),phase:1}}
+    else{const pi=progInfo(g,k);if(pi&&pi.due){S.prog[key]={start:today(),phase:pi.pr.phase+1,msg:pi.why};toast('🐐 Nuova scheda per te, GOAT!')}}
+    const ph=S.prog[key].phase;
+    const n={id:uid(),date:today(),name:t.n,goal:g,tpl:k,phase:ph,notes:'',exercises:((S.customTpl&&S.customTpl[g]&&S.customTpl[g][k])?t.ex:tplEx(t,ph)).map(x=>({name:x[0],reps:x[2],rest:x[3],dur:x[4],sets:Array.from({length:x[1]},()=>blank())}))};
+    S.sessions.unshift(n);S.cur=n.id}
+  else if(a==='delex'){if(window._dx!==i){window._dx=i;render();return}window._dx=null;if(S.run&&S.run.id===s.id){clearInterval(tInt);tInt=null;S.run=null}s.exercises.splice(i,1)}
+  else if(a==='addset'){const l=s.exercises[i].sets.slice(-1)[0];s.exercises[i].sets.push(l?{kg:l.kg,reps:l.reps,done:false}:blank())}
+  else if(a==='delset'){if(s.exercises[i].sets.length>1)s.exercises[i].sets.pop()}
+  else if(a==='chk'){
+    unlock();
+    const t=s.exercises[i].sets[j],mine=S.run&&S.run.id===s.id&&S.run.e===i&&S.run.s===j;
+    if(t.done){t.done=false;if(mine){clearInterval(tInt);tInt=null;S.run=null}}
+    else{t.done=true;startRun(s.id,i,j,s.exercises[i].rest||S.rest)}
+    save();render();return}
+  else if(a==='del'){if(!window._conf){window._conf=true;render();return}window._conf=false;if(S.run&&S.run.id===s.id){clearInterval(tInt);tInt=null;S.run=null}S.sessions=S.sessions.filter(x=>x.id!==s.id);S.cur=null}
+  else if(a==='copy'){copySummary(s);return}
+  save();render();window.scrollTo(0,0===0&&(a==='open'||a==='new'||a==='repeat'||a==='tpl'||a==='tab'||a==='back')?0:window.scrollY);
+});
+document.addEventListener('input',ev=>{
+  const f=ev.target.dataset.f,s=cur();if(f==='aiq'){(window._ai=window._ai||{}).q=ev.target.value;return}if(/^ct/.test(f||'')){const g=ev.target.dataset.g,k=ev.target.dataset.k,i=+ev.target.dataset.i,c=ensureCustomTpl(g,k),x=c.ex[i];if(!x)return;if(f==='ctname')x[0]=ev.target.value;else if(f==='ctsets')x[1]=Math.max(1,Math.min(10,+ev.target.value||1));else if(f==='ctreps')x[2]=ev.target.value;else if(f==='ctrest')x[3]=+ev.target.value;save();return}if(f==='psearch'){if(window._pk){window._pk.q=ev.target.value;const pl=$('#pl');if(pl)pl.innerHTML=pickList(window._pk)}return}if(f==='exsel'||f==='tgt'||f==='every'){if(f==='exsel')S.ex=ev.target.value;else if(f==='tgt')S.tgt=+ev.target.value;else S.every=+ev.target.value;save();render();return}if(!f||!s)return;
+  const v=ev.target.value,i=ev.target.dataset.e,j=ev.target.dataset.s;
+  if(f==='kg'||f==='reps')s.exercises[i].sets[j][f]=v;
+  else if(f==='name')s.exercises[i].name=v;
+  else if(f==='sname')s.name=v;
+  else if(f==='sdate')s.date=v;
+  else if(f==='notes')s.notes=v;
+  else if(f==='rest'){s.exercises[i].rest=+v;save();render();return}
+  save();
+});
+function copySummary(s){
+  const t=stats(s);
+  let x=(s.name||'Allenamento')+' – '+fd(s.date)+'\n';
+  s.exercises.forEach(e=>{const sets=e.sets.filter(t=>t.kg!==''||t.reps!=='').map(t=>(t.kg||'0')+'×'+(t.reps||'0'));
+    if(e.name.trim())x+=e.name.trim()+': '+(sets.join(', ')||'-')+'\n'});
+  if(t.vol)x+='Volume: '+Math.round(t.vol)+' kg\n';
+  if(s.notes)x+='Note: '+s.notes+'\n';
+  const ok=()=>toast('Riepilogo copiato');
+  try{navigator.clipboard.writeText(x).then(ok,()=>fb())}catch(e){fb()}
+  function fb(){const a=document.createElement('textarea');a.value=x;document.body.appendChild(a);a.select();try{document.execCommand('copy');ok()}catch(e){toast('Copia non disponibile')}a.remove()}
+}
+(async()=>{try{AI=window.claude&&window.claude.use?await window.claude.use('sample'):null}catch(e){AI=null}if(AI===undefined)AI=null;if(!S.cur&&S.tab==='help')render()})();
+if(S.run){Date.now()>=S.run.end?finish(false):(tInt=setInterval(tick,250))}
+(async()=>{const {data}=await sb.auth.getSession();AUTH_USER=data.session&&data.session.user;if(AUTH_USER)render();else showLogin();sb.auth.onAuthStateChange((_e,session)=>{AUTH_USER=session&&session.user;if(!AUTH_USER)showLogin();});})();
+</script>
+</body>
+</html>
